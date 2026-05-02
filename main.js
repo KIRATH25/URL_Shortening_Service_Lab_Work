@@ -1,10 +1,8 @@
 const app = express();
 app.use(express.json());
 
-// DB
 mongoose.connect('mongodb://localhost:27017/urlshortener', { useNewUrlParser: true, useUnifiedTopology: true });
 
-// URL Schema
 const urlSchema = new mongoose.Schema({
     longUrl: String,
     shortId: String,
@@ -12,7 +10,6 @@ const urlSchema = new mongoose.Schema({
 });
 const Url = mongoose.model('Url', urlSchema);
 
-// POST /shortUrl
 app.post('/shortUrl', async (req, res) => {
     const { longUrl } = req.body;
     const shortId = shortid.generate();
@@ -21,7 +18,6 @@ app.post('/shortUrl', async (req, res) => {
     res.json({ shortUrl: `http://localhost:3000/${shortId}` });
 });
 
-// GET /:shortId
 app.get('/:shortId', async (req, res) => {
     const { shortId } = req.params;
     const url = await Url.findOne({ shortId });
@@ -34,7 +30,6 @@ app.get('/:shortId', async (req, res) => {
     }
 });
 
-// PATCH /:shortId
 app.patch('/:shortId', async (req, res) => {
     const { shortId } = req.params;
     const { longUrl, accessCount } = req.body;
